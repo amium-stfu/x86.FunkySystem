@@ -11,7 +11,7 @@ using System.Diagnostics;
 using FunkySystem.Signals;
 using FunkySystem.Core;
 
-namespace FunkySystem.Battery
+namespace FunkySystem.Devices
 {
     public partial class FormAddTest : Form
     {
@@ -88,7 +88,7 @@ namespace FunkySystem.Battery
                 return;
             }
             
-            Sequencer = new BatterySequenceControl(SequenceName.SignalValue, new DeviceBatteryTest(SequenceName.SignalValue));
+            Sequencer = new BatterySequenceControl(SequenceName.SignalValue, new DeviceCycler(SequenceName.SignalValue));
             Sequencer.BatteryTest.Battery.LoadFromJson("NewTest", BatterUri);
             Sequencer.BatteryTest.Cyclers = new Dictionary<string, Cycler>();
 

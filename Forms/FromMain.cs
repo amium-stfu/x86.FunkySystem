@@ -1,4 +1,7 @@
 
+using FunkySystem.Core;
+using System.Diagnostics;
+
 namespace FunkySystem
 {
     public partial class FormMain : Form
@@ -14,10 +17,21 @@ namespace FunkySystem
 
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private async void button1_Click(object sender, EventArgs e)
         {
-            FormSignalPool signalPoolForm = new FormSignalPool();
-            signalPoolForm.Show();
+            //FormSignalPool signalPoolForm = new FormSignalPool();
+            //signalPoolForm.Show();
+            await SequenceManager.LoadSequences();
+
+            foreach (var item in SequenceManager.Sequences) 
+            { 
+             Debug.WriteLine(item.Key);
+                foreach (var seq in item.Value) 
+                {
+                    Debug.WriteLine($"   {seq.Key} ");
+                }
+
+            }
         }
 
 

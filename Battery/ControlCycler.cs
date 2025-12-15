@@ -1,27 +1,40 @@
 ﻿using FunkySystem.BatteryCharger;
 using FunkySystem.Controls;
+using FunkySystem.Core;
 using ScottPlot.Colormaps;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 
-namespace FunkySystem.Battery
+namespace FunkySystem.Devices
 {
-    public class ControlBatteryTest : FunkyDeviceControl
+    public class ControlCycler : FunkyDeviceControl
     {
-        DeviceBatteryTest Test;
+        DeviceCycler Test;
 
         internal RadioButtonEx ExplorerButton;
 
         public ButtonWithIcon StateControl => btnState;
 
-        public ControlBatteryTest(DeviceBatteryTest batteryTest)
+        public ControlCycler(DeviceCycler batteryTest)
         {
             Test = batteryTest;
             PanelDut.MenuClicked += PanelDut_MenuClicked;
             Test.Battery.Main.Serielnumber.OnUpdate = () => UpdateButton();
-         
+
+            PanelSequence.MenuClicked += PanelSequence_MenuClicked;
+
+            
+
+
+        }
+
+        private void PanelSequence_MenuClicked(object? sender, EventArgs e)
+        {
+            Test.SequenceSelected =  SequenceManager.Sequences["Cycler"]["MyPlc"].PlcInstance;
+            Test.SequenceSelected.AttachDevice(Test);
+            Test.SequenceSelected.Start();
         }
 
         void UpdateButton()

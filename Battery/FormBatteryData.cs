@@ -5,11 +5,11 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using FunkySystem.Battery;
+using FunkySystem.Devices;
 using FunkySystem.Controls;
 using FunkySystem.Core;
 
-namespace FunkySystem.Battery
+namespace FunkySystem.Devices
 {
     public partial class FormBatteryData : Form
     {

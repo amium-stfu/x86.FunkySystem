@@ -2,6 +2,7 @@
 using FunkySystem.BatteryCharger;
 using FunkySystem.Controls;
 using FunkySystem.Core;
+using FunkySystem.SequenceEditor;
 using FunkySystem.Signals;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ using System.Globalization;
 using System.Text;
 using System.Windows.Controls;
 
-namespace FunkySystem.Battery
+namespace FunkySystem.Devices
 {
     internal class FormBatteryMain : FormMain
     {
@@ -19,6 +20,9 @@ namespace FunkySystem.Battery
         ControlOverview Overview = new ControlOverview();
         ControlClimaChamber ClimaChamber;
         Dictionary<BaseControl, int> TestList = new();
+
+        ControlSequenceEditor SequenceEditor = new ControlSequenceEditor();
+
 
 
         public FormBatteryMain()
@@ -28,8 +32,9 @@ namespace FunkySystem.Battery
             PanelMainMenu.AddRadioButton("OverView","overview", () => ShowOverview());
             PanelMainMenu.AddRadioButton("Test Explorer", "explorer", () => ShowExplorer());
             PanelMainMenu.AddRadioButton("Temp. Control","tc", () => ShowOverTempControl());
+            PanelMainMenu.AddRadioButton("Sequence Editor", "editor", () => ShowSequenceEditor());
 
-            
+
             btnAddTest.LeftClicked += BtnAddTest_LeftClicked;
             ((RadioButtonEx)PanelMainMenu.Controls[0]).PerfomClicked();
         }
@@ -112,7 +117,7 @@ namespace FunkySystem.Battery
 
         RadioButtonEx lastClicked = null;
 
-        void ShowTest(ControlBatteryTest test, RadioButtonEx button)
+        void ShowTest(ControlCycler test, RadioButtonEx button)
         {
             PanelView.Controls.Clear();
            
@@ -314,6 +319,16 @@ namespace FunkySystem.Battery
             ClimaChamber.ControlMenu.PerfomClick("chart");
         }
 
+        void ShowSequenceEditor()
+        {
+            PanelView.Controls.Clear();
+            TableRoot.RowStyles[3].Height = 0;
+            SequenceEditor.Dock = DockStyle.Fill;
+            UpdateOverview();
+            PanelView.Controls.Add(SequenceEditor);
+        
+        }
+
         private void InitializeComponent()
         {
             SuspendLayout();
@@ -346,15 +361,15 @@ namespace FunkySystem.Battery
     public class BatterySequenceControl
     {
         public string Name;
-        public DeviceBatteryTest BatteryTest;
-        public ControlBatteryTest DeviceControl;
+        public DeviceCycler BatteryTest;
+        public ControlCycler DeviceControl;
   
 
-        public BatterySequenceControl(string name, DeviceBatteryTest batteryTest)
+        public BatterySequenceControl(string name, DeviceCycler batteryTest)
         {
             Name = name;
             BatteryTest = batteryTest;
-            DeviceControl = new ControlBatteryTest(BatteryTest);
+            DeviceControl = new ControlCycler(BatteryTest);
       
             DeviceControl.Dock = DockStyle.Fill;
         }

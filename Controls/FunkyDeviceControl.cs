@@ -1,4 +1,4 @@
-﻿using FunkySystem.Battery;
+﻿using FunkySystem.Devices;
 using FunkySystem.Controls;
 using FunkySystem.Core;
 using FunkySystem.Signals;
@@ -118,8 +118,8 @@ namespace FunkySystem.Controls
 
         public void InitLog(FunkyDevice device)
         {
+            device.Log.UiContext ??= SynchronizationContext.Current;
             gridLog.DataSource = device.Log.LogBindingSource;
-
 
 
             gridLog.CellFormatting -= gridLog_CellFormatting;
@@ -333,6 +333,10 @@ namespace FunkySystem.Controls
         private void LogPanel_Resize(object sender, EventArgs e)
         {
             this.gridLog.Size = new System.Drawing.Size(LogPanel.ContentPanel.Width - 20, LogPanel.ContentPanel.Height - 20);
+            if(!gridLog.Columns.Contains("TimeStamp")) return;
+            gridLog.Columns["TimeStamp"].Width = 150;
+            gridLog.Columns["Level"].Width = 80;
+            gridLog.Columns["Message"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
         }
 
     }

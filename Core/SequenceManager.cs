@@ -1,8 +1,10 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using FunkySystem.SequenceEditor;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -13,7 +15,6 @@ using System.Threading.Tasks;
 
 namespace FunkySystem.Core
 {
-
     public class FunkySequence
     {
         public string Name { get; set; }
@@ -32,7 +33,7 @@ namespace FunkySystem.Core
         {
             Name = name;
             Uri = uri;
-            IsActive = false;
+            IsActive = true;
             Visible = true;
         }
 
@@ -42,6 +43,46 @@ namespace FunkySystem.Core
         {
             UnloadPlcInstance();
 
+            // 1) Bevorzugt: Roslyn-Workspace verwenden
+            try
+            {
+                var asm = await FunkyCore.Roslyn.BuildAssemblyAsync().ConfigureAwait(false);
+
+                // Diagnostik aus dem aktuellen Roslyn-Projekt holen (optional)
+                var project = FunkyCore.Roslyn.GetCurrentProject();
+                if (project != null)
+                {
+                    var compilation = await project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
+                    LastDiagnostics = compilation?.GetDiagnostics(cancellationToken).ToArray();
+                }
+
+                if (asm != null)
+                {
+                    var baseType = typeof(FunkyPlcBase);
+                    var targetName = Path.GetFileNameWithoutExtension(Uri);
+
+                    // Versuche zuerst, den Typ anhand des Dateinamens zu matchen; sonst erstes passendes Derivat nehmen
+                    var plcType =
+                        asm.GetTypes().FirstOrDefault(t =>
+                            !t.IsAbstract && baseType.IsAssignableFrom(t) &&
+                            string.Equals(t.Name, targetName, StringComparison.OrdinalIgnoreCase))
+                        ?? asm.GetTypes().FirstOrDefault(t => !t.IsAbstract && baseType.IsAssignableFrom(t));
+
+                    if (plcType == null)
+                        throw new InvalidOperationException("Kein Typ gefunden, der von FunkyPlcBase ableitet (Roslyn-Assembly).");
+
+                    LoadContext = null; // Roslyn lädt in den Default-LoadContext (nicht entladbar)
+                    PlcInstance = (FunkyPlcBase)Activator.CreateInstance(plcType)!;
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[CreatePlcInstanceAsync] Roslyn-Build/Load fehlgeschlagen: {ex}");
+                // Fallback unten nutzen
+            }
+
+            // 2) Fallback: Single-File Runtime-Compiler (bisheriges Verhalten)
             var csPath = FunkyPlcRuntimeCompiler.ResolveToFilePath(Uri);
 
             var result = await FunkyPlcRuntimeCompiler.CompileAndLoadAsync(
@@ -53,7 +94,7 @@ namespace FunkySystem.Core
             LastDiagnostics = result.Diagnostics;
 
             if (result.Assembly == null)
-                throw new InvalidOperationException("Compile failed. See LastDiagnostics.");
+                throw new InvalidOperationException("Compile fehlgeschlagen. Siehe LastDiagnostics.");
 
             LoadContext = result.LoadContext;
             PlcInstance = FunkyPlcRuntimeCompiler.CreatePlcInstance(result.Assembly);
@@ -73,10 +114,64 @@ namespace FunkySystem.Core
     }
 
 
-    internal class SequenceManager
+    internal static class SequenceManager
     {
-        public readonly Dictionary<string,Dictionary<string, FunkySequence>> Sequences 
+        public static readonly Dictionary<string,Dictionary<string, FunkySequence>> Sequences 
             = new Dictionary<string,Dictionary<string, FunkySequence>>(StringComparer.OrdinalIgnoreCase);
+
+
+        public static async Task LoadSequences()
+        {
+            string uri = System.IO.Path.Combine(Program.SettingsDirectory, "Sequences");
+
+            if (!System.IO.Directory.Exists(uri))
+                return;
+
+            foreach (string dir in System.IO.Directory.GetDirectories(uri))
+            {
+                string groupKey = System.IO.Path.GetFileName(dir);
+
+                if (!Sequences.ContainsKey(groupKey))
+                    Sequences[groupKey] = new Dictionary<string, FunkySequence>(StringComparer.OrdinalIgnoreCase);
+
+                foreach (string file in System.IO.Directory.GetFiles(dir, "*.cs"))
+                {
+                    string sequenceName = System.IO.Path.GetFileNameWithoutExtension(file);
+                    string path = Path.GetDirectoryName(file);
+
+                    string code = File.ReadAllText(file);
+
+                    string deviceType =  Path.GetFileName(path);
+
+                    FunkyCore.Roslyn.AddCodeDocument(file, code, true, deviceType);
+
+                    if (Sequences[groupKey].ContainsKey(sequenceName))
+                        continue;
+
+                    var seq = new FunkySequence(sequenceName, file);
+
+                    try
+                    {
+                        // If DeviceCycler (or other types) are outside TPA, add their assembly paths:
+                        // var refs = new[] { PathToDeviceCyclerDll };
+                        // await seq.CreatePlcInstanceAsync(additionalReferencePaths: refs).ConfigureAwait(false);
+
+                        await seq.CreatePlcInstanceAsync().ConfigureAwait(false);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"Sequence '{sequenceName}' failed to compile/load: {ex}");
+                        if (seq.LastDiagnostics != null && seq.LastDiagnostics.Count > 0)
+                        {
+                            foreach (var d in seq.LastDiagnostics)
+                                Debug.WriteLine($"Diagnostic: {d.Id} {d.Severity} {d.GetMessage()}");
+                        }
+                    }
+
+                    Sequences[groupKey][sequenceName] = seq;
+                }
+            }
+        }
 
 
     }

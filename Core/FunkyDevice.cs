@@ -1,6 +1,4 @@
-﻿using FunkySystem;
-using FunkySystem.Core;
-using FunkySystem.Signals;
+﻿using FunkySystem.Signals;
 using Serilog;
 using Serilog.Core;
 using Serilog.Events;
@@ -13,7 +11,7 @@ using System.Text;
 using System.Text.Json;
 using System.Xml.Linq;
 
-namespace FunkySystem
+namespace FunkySystem.Core
 {
     public class FunkyDevice
     {
@@ -80,9 +78,11 @@ namespace FunkySystem
 
         public bool Run { get; set; }
 
-        public Dictionary<string, FunkyPlcOld> Sequences = new Dictionary<string, FunkyPlcOld>();
 
-        public FunkyPlcOld SequenceSelected = null;
+
+        public Dictionary<string, FunkyPlcBase> Sequences = new Dictionary<string, FunkyPlcBase>();
+
+        public FunkyPlcBase SequenceSelected = null;
 
         public FunkyDevice(string name)
         {
@@ -188,8 +188,8 @@ namespace FunkySystem
             string json = System.IO.File.ReadAllText(uri);
             Dictionary<string, object> read = JsonSerializer.Deserialize<Dictionary<string, object>>(json);
             SequenceSelected = Sequences[read["Name"].ToString()];
-            SequenceSelected.SetSettings(json);
-            SequenceSelected.UpateSequenceDisplay();
+            //SequenceSelected.SetSettings(json);
+            //SequenceSelected.UpateSequenceDisplay();
 
             if (autoStart)
                 StartSequence();
@@ -198,7 +198,7 @@ namespace FunkySystem
         public void StartSequence()
         {
 
-            Log.Info($"Sequence {SequenceSelected.Text} Start");
+         //   Log.Info($"Sequence {SequenceSelected.Text} Start");
             SequenceSelected.Start();
 
         }
@@ -303,7 +303,7 @@ namespace FunkySystem
             if (SequenceSelected.IsRunning)
             {
                 SequenceSelected.Abort("Stopped");
-                Log.Info($"[{this.GetType().Name}] {Name}: " + "Stopped " + SequenceSelected.Name);
+          //      Log.Info($"[{this.GetType().Name}] {Name}: " + "Stopped " + SequenceSelected.Name);
             }
 
         }
@@ -316,7 +316,7 @@ namespace FunkySystem
             SubStatus = "Ready";
             if (SequenceSelected.IsRunning)
             {
-                SequenceSelected.UserAbort("Stopped by user");
+              //  SequenceSelected.UserAbort("Stopped by user");
             }
         }
 
@@ -324,7 +324,7 @@ namespace FunkySystem
         {
             if (SequenceSelected == null) return;
             SequenceSelected.Start();
-            Log.Info("Start " + SequenceSelected.Name);
+         //   Log.Info("Start " + SequenceSelected.Name);
         }
 
     }
@@ -373,6 +373,7 @@ namespace FunkySystem
             if (_bindingSource.List is not IList list)
                 return;
 
+           
 
             void AddRow()
             {

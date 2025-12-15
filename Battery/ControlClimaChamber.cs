@@ -4,7 +4,7 @@ using System.Text;
 using FunkySystem.Controls;
 
 
-namespace FunkySystem.Battery
+namespace FunkySystem.Devices
 {
     public class ControlClimaChamber : FunkyDeviceControl
     {

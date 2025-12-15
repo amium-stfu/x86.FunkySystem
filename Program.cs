@@ -1,3 +1,8 @@
+using FunkySystem.BatteryCharger;
+using FunkySystem.Core;
+using FunkySystem.Devices;
+using FunkySystem.Roslyn;
+using FunkySystem.UI;
 using Serilog;
 using Serilog.Core;
 using Serilog.Events;
@@ -5,23 +10,16 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Security.RightsManagement;
 using System.Windows.Input;
-using FunkySystem.UI;
 using static FunkySystem.Logger;
-using FunkySystem.Battery;
-using FunkySystem.BatteryCharger;
 
 namespace FunkySystem
 {
-
-    
     internal static class Program
     {
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
         /// 
-
-        
 
         public static readonly Dictionary<string,object> ConnectedDevices = new();
 
@@ -35,6 +33,16 @@ namespace FunkySystem
         [STAThread]
         static void Main()
         {
+            FunkyCore.Roslyn.CreateProject();
+            RoslynDiagnostic.InitDiagnostic();
+            FunkyCore.Roslyn.AddCodeDocument(
+                "GlobalUsing.cs", 
+                "global using System.Threading.Tasks; " +
+                "global using FunkySystem.Devices;" +
+                "global using FunkySystem.Controls;", true,"Program");
+
+
+
             if (!System.IO.Directory.Exists(SettingsDirectory))
                 System.IO.Directory.CreateDirectory(SettingsDirectory);
 
@@ -54,6 +62,27 @@ namespace FunkySystem
             ConnectedDevices.Add("Cycler7", new Cycler("Cycler7", demo: true));
             ConnectedDevices.Add("Cycler8", new Cycler("Cycler8", demo: true));
             ConnectedDevices.Add("ClimaChamber", new DeviceClimaChamber("Oven"));
+
+            foreach (var device in ConnectedDevices.Values)
+            {
+                if (device is Cycler cycler)
+                {
+                    if (!Directory.Exists(System.IO.Path.Combine(SettingsDirectory, "Sequences", "Cycler")))
+                    {
+                        Directory.CreateDirectory(System.IO.Path.Combine(SettingsDirectory, "Sequences", "Cycler"));
+                    }
+
+                }
+                else if (device is DeviceClimaChamber clima)
+                {
+                    if (!Directory.Exists(System.IO.Path.Combine(SettingsDirectory, "Sequences", "ClimaChamber")))
+                    {
+                        Directory.CreateDirectory(System.IO.Path.Combine(SettingsDirectory, "Sequences", "ClimaChamber"));
+                    }
+                }
+            }
+
+         
 
 
 

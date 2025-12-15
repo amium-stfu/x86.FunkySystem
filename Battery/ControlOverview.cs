@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace FunkySystem.Battery
+namespace FunkySystem.Devices
 {
     internal class ControlOverview : FunkyDeviceControl
     {

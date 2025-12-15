@@ -1,4 +1,4 @@
-﻿using FunkySystem.Battery;
+﻿using FunkySystem.Devices;
 using FunkySystem.Core;
 using FunkySystem.Helpers;
 using FunkySystem.Signals;

@@ -1,4 +1,4 @@
-﻿namespace FunkySystem.Battery
+﻿namespace FunkySystem.Devices
 {
     partial class FormAddTest
     {

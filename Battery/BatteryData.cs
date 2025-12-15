@@ -9,9 +9,9 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Windows.Documents;
-using static FunkySystem.Battery.MainData;
+using static FunkySystem.Devices.MainData;
 
-namespace FunkySystem.Battery
+namespace FunkySystem.Devices
 {
     public class BatteryData
     {

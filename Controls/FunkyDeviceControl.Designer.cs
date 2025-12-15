@@ -24,7 +24,7 @@
             tableMain = new TableLayoutPanel();
             panelBottom = new Panel();
             tableBottom = new TableLayoutPanel();
-            ControlSequence = new Display();
+            PanelSequence = new Display();
             LogPanel = new Display();
             PanelDut = new Display();
             ControlSelected = new Panel();
@@ -76,7 +76,7 @@
             tableBottom.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 550F));
             tableBottom.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tableBottom.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableBottom.Controls.Add(ControlSequence, 2, 0);
+            tableBottom.Controls.Add(PanelSequence, 2, 0);
             tableBottom.Controls.Add(LogPanel, 1, 0);
             tableBottom.Controls.Add(PanelDut, 0, 0);
             tableBottom.Dock = DockStyle.Fill;
@@ -88,40 +88,42 @@
             tableBottom.Size = new Size(1497, 256);
             tableBottom.TabIndex = 0;
             // 
-            // ControlSequence
+            // PanelSequence
             // 
-            ControlSequence.BorderColor = Color.Transparent;
-            ControlSequence.ContentBackColor = Color.White;
-            ControlSequence.ContentForeColor = Color.White;
+            PanelSequence.BackColor = Color.WhiteSmoke;
+            PanelSequence.BorderColor = Color.Transparent;
+            PanelSequence.ContentBackColor = Color.White;
+            PanelSequence.ContentForeColor = Color.White;
             // 
             // 
             // 
-            ControlSequence.ContentPanel.AutoScroll = true;
-            ControlSequence.ContentPanel.BackColor = Color.WhiteSmoke;
-            ControlSequence.ContentPanel.FlowDirection = FlowDirection.TopDown;
-            ControlSequence.ContentPanel.Location = new Point(3, 31);
-            ControlSequence.ContentPanel.Name = "";
-            ControlSequence.ContentPanel.Padding = new Padding(6);
-            ControlSequence.ContentPanel.Size = new Size(465, 222);
-            ControlSequence.ContentPanel.TabIndex = 0;
-            ControlSequence.ContentPanel.WrapContents = false;
-            ControlSequence.DefaultBackColor = Color.WhiteSmoke;
-            ControlSequence.Dock = DockStyle.Fill;
-            ControlSequence.GridScale = 5;
-            ControlSequence.HoverColor = Color.Transparent;
-            ControlSequence.Location = new Point(1026, 0);
-            ControlSequence.Margin = new Padding(3, 0, 0, 0);
-            ControlSequence.Name = "ControlSequence";
-            ControlSequence.SelectColor = Color.Orange;
-            ControlSequence.Selected = false;
-            ControlSequence.ShowMenuIcon = true;
-            ControlSequence.Size = new Size(471, 256);
-            ControlSequence.TabIndex = 1;
-            ControlSequence.Text = "infoPanel2";
-            ControlSequence.TitleText = "Sequence";
+            PanelSequence.ContentPanel.AutoScroll = true;
+            PanelSequence.ContentPanel.BackColor = Color.WhiteSmoke;
+            PanelSequence.ContentPanel.FlowDirection = FlowDirection.TopDown;
+            PanelSequence.ContentPanel.Location = new Point(3, 31);
+            PanelSequence.ContentPanel.Name = "";
+            PanelSequence.ContentPanel.Padding = new Padding(6);
+            PanelSequence.ContentPanel.Size = new Size(465, 222);
+            PanelSequence.ContentPanel.TabIndex = 0;
+            PanelSequence.ContentPanel.WrapContents = false;
+            PanelSequence.DefaultBackColor = Color.WhiteSmoke;
+            PanelSequence.Dock = DockStyle.Fill;
+            PanelSequence.GridScale = 5;
+            PanelSequence.HoverColor = Color.Transparent;
+            PanelSequence.Location = new Point(1026, 0);
+            PanelSequence.Margin = new Padding(3, 0, 0, 0);
+            PanelSequence.Name = "PanelSequence";
+            PanelSequence.SelectColor = Color.Orange;
+            PanelSequence.Selected = false;
+            PanelSequence.ShowMenuIcon = true;
+            PanelSequence.Size = new Size(471, 256);
+            PanelSequence.TabIndex = 1;
+            PanelSequence.Text = "infoPanel2";
+            PanelSequence.TitleText = "Sequence";
             // 
             // LogPanel
             // 
+            LogPanel.BackColor = Color.WhiteSmoke;
             LogPanel.BorderColor = Color.Transparent;
             LogPanel.ContentBackColor = Color.White;
             LogPanel.ContentForeColor = Color.White;
@@ -291,7 +293,7 @@
         public Panel ControlSelected;
         public ButtonWithIcon btnState;
         private TableLayoutPanel tableBottom;
-        public Display ControlSequence;
+        public Display PanelSequence;
         public Display LogPanel;
         private TableLayoutPanel tableData;
         public Display DisplayData;
