@@ -35,7 +35,7 @@ namespace FunkySystem.Core
 
         [Description("Running")]
         [FaIcon("fa:circle-play:black")]
-        Run = 4,
+        Running = 4,
 
         [Description("Pause")]
         [FaIcon("fa:circle-pause:black")]
@@ -52,6 +52,10 @@ namespace FunkySystem.Core
         [Description("Alert")]
         [FaIcon("fa:circle-exclamation:red")]
         Alert = 12,
+
+        [Description("Aborted")]
+        [FaIcon("fa:ban:red")]
+        Aborted = 13,
 
     }
 

@@ -28,39 +28,39 @@ namespace FunkySystem.Battery
             Temperature.NoiseStrength = 0.1;
             Temperature.TauValue = 0.25;
 
-            ControllerTemperature = new PIDController(
-                name: poolName + ".ControllerTemperature",
-                text: $"{Name} PID Temperature",
-                source: Temperature,
-                outSignal: Temperature.Set,
-                computeInterval: 10,
-                outputInterval: 100,
-                ks: 3,
-                tu: 0.2,
-                tg: 1,
-                outMin: 0,
-                outMax: 100,
-                dFilterTauMs: 1000);
-            ControllerTemperature.Set.Value = 25;
-            //   ControllerTemperature.Start();
-
-            //ControllerPredictiveTemperature = new PredictivePIDController(
-            //    name: poolName + ".PPID",
-        
+            //ControllerTemperature = new PIDController(
+            //    name: poolName + ".ControllerTemperature",
+            //    text: $"{Name} PID Temperature",
             //    source: Temperature,
             //    outSignal: Temperature.Set,
             //    computeInterval: 10,
             //    outputInterval: 100,
-            //    ks: 20,
+            //    ks: 3,
             //    tu: 0.2,
             //    tg: 1,
-            //    lookAheadMs: 200,
-            //    lookBackMs: 500,
             //    outMin: 0,
             //    outMax: 100,
             //    dFilterTauMs: 1000);
+            //ControllerTemperature.Set.Value = 25;
+            //   ControllerTemperature.Start();
 
-            //ControllerPredictiveTemperature.Set.Value = 25;
+            ControllerPredictiveTemperature = new PredictivePIDController(
+                name: poolName + ".PPID",
+
+                source: Temperature,
+                outSignal: Temperature.Set,
+                computeInterval: 10,
+                outputInterval: 100,
+                ks: 20,
+                tu: 0.2,
+                tg: 1,
+                lookAheadMs: 200,
+                lookBackMs: 500,
+                outMin: 0,
+                outMax: 100,
+                dFilterTauMs: 1000);
+
+            ControllerPredictiveTemperature.Set.Value = 25;
             //ControllerPredictiveTemperature.Start();
 
         }

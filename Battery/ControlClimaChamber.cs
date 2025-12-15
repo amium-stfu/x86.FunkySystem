@@ -23,21 +23,24 @@ namespace FunkySystem.Battery
             HideSequencePanel();
 
             btnteach = new ButtonSimple();
-            btnteach.SignalText = "Teach\nTemperature";
+            btnteach.SignalValue = "Start Controller";
 
-            btnteach.Click += (s,e) => { Device.ControllerTemperature.Teach(3, 50); };
+            btnteach.Click += (s,e) => { Device.ControllerPredictiveTemperature.Start(); };
 
             btnStart = new ButtonSimple();
-            btnStart.SignalText = "Start\nController";
-            btnStart.Click += (s, e) => { Device.ControllerTemperature.Start(); };
+            btnStart.SignalValue = "Stop Controller";
+            btnStart.Click += (s, e) => { Device.ControllerPredictiveTemperature.Stop(); };
 
 
             Device = device;
 
             DisplayData.Add(new object[] { Device.Temperature }, primary: true);
             DisplayData.Add(new object[] {btnteach,btnStart }, primary: true);
-            DisplayData.Add(new object[] { Device.ControllerTemperature }, primary: true);
-            DisplayData.Add(new object[] { Device.ControllerTemperature.Ks, Device.ControllerTemperature.Tu, Device.ControllerTemperature.Tg }, primary: true);
+            DisplayData.Add(new object[] { Device.ControllerPredictiveTemperature }, primary: true);
+            DisplayData.Add(new object[] {
+                Device.ControllerPredictiveTemperature.PID.Ks,
+                Device.ControllerPredictiveTemperature.PID.Tu,
+                Device.ControllerPredictiveTemperature.PID.Tg }, primary: true);
 
             // DisplayData.Add(new object[] { Device.ControllerPredictiveTemperature }, primary: true);
 

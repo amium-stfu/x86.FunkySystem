@@ -45,15 +45,44 @@ namespace FunkySystem
             }
         }
 
+        public void SetAlertState(string message)
+        {
+            State = State.Alert;
+            Log.Error("Alert State set -> " + message);
+        }
+
+        public void SetWarningState(string message)
+        {
+            State = State.Warning;
+            Log.Warn("Warning State set -> " + message);
+        }
+
+        public void SetAbortedState(string message)
+        {
+            State = State.Aborted;
+            Log.Error("Aborted State set -> " + message);
+        }
+
+        public void SetReadyState()
+        {
+            State = State.Ready;
+            Log.Info("Ready State set");
+        }
+
+        public void SetRunningState()
+        {
+            State = State.Running;
+            Log.Info("Running State set");
+        }
 
         public string Status = "unknown";
         public string SubStatus = "unknown";
 
         public bool Run { get; set; }
 
-        public Dictionary<string, FunkyPlc> Sequences = new Dictionary<string, FunkyPlc>();
+        public Dictionary<string, FunkyPlcOld> Sequences = new Dictionary<string, FunkyPlcOld>();
 
-        public FunkyPlc SequenceSelected = null;
+        public FunkyPlcOld SequenceSelected = null;
 
         public FunkyDevice(string name)
         {

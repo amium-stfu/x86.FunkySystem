@@ -8,7 +8,7 @@ using System.Xml.Linq;
 
 namespace FunkySystem
 {
-    public class FunkyPlc
+    public class FunkyPlcOld
     {
 
         public string Type
@@ -75,14 +75,14 @@ namespace FunkySystem
 
         // public CsvLogger CsvLog;
 
-        public StringSignal Display = new StringSignal("display", text: "Display");
+        public StringSignal InfoDisplay = new StringSignal("display", text: "Display");
 
         DeviceLogger Log;
 
         FunkyDevice Device;
 
 
-        public FunkyPlc(string name, string id, FunkyDevice device)
+        public FunkyPlcOld(string name, string id, FunkyDevice device)
         {
             Name = name;
             Id = id;

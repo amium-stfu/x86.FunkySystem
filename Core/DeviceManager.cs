@@ -44,7 +44,7 @@ namespace FunkySystem.Core
             Devices.Values.Any(d => d.State == State.Warning);
 
         public static bool AnyRunning =>
-            Devices.Values.Any(d => d.State == State.Run);
+            Devices.Values.Any(d => d.State == State.Running);
 
         public static bool AnyInitializing =>
             Devices.Values.Any(d => d.State == State.Init);
