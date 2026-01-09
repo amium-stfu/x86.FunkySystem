@@ -29,9 +29,16 @@ namespace FunkySystem
                 foreach (var seq in item.Value) 
                 {
                     Debug.WriteLine($"   {seq.Key} ");
+                   
+
+                    if(seq.Value is FunkySequence)
+                        Debug.WriteLine($"{seq.Value.Name} is valid");
+
                 }
 
             }
+
+           
         }
 
 

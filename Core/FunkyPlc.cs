@@ -14,6 +14,8 @@ public abstract class FunkyPlcBase : IAsyncDisposable
     private Task? _runTask;
     private Task? _idleTask;
 
+    public string Name { get; set; } = "new";
+
     protected CancellationToken AbortToken => _cts?.Token ?? CancellationToken.None;
     protected bool AbortRequested => _cts?.IsCancellationRequested == true;
 

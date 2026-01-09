@@ -261,6 +261,7 @@
             btnReload.TabIndex = 0;
             btnReload.Text = "buttonWithIcon1";
             btnReload.LeftClicked += btnReload_LeftClicked;
+            btnReload.Click += btnReload_Click;
             // 
             // ControlSequenceEditor
             // 

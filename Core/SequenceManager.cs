@@ -149,6 +149,7 @@ namespace FunkySystem.Core
                         continue;
 
                     var seq = new FunkySequence(sequenceName, file);
+                    seq.Name = sequenceName;
 
                     try
                     {

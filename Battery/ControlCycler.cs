@@ -32,9 +32,17 @@ namespace FunkySystem.Devices
 
         private void PanelSequence_MenuClicked(object? sender, EventArgs e)
         {
-            Test.SequenceSelected =  SequenceManager.Sequences["Cycler"]["MyPlc"].PlcInstance;
-            Test.SequenceSelected.AttachDevice(Test);
-            Test.SequenceSelected.Start();
+            try
+            {
+                Test.SequenceSelected = SequenceManager.Sequences["Cycler"]["MyPlc"].PlcInstance;
+            
+                Test.SequenceSelected.AttachDevice(Test);
+                Test.SequenceSelected.Start();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
         }
 
         void UpdateButton()

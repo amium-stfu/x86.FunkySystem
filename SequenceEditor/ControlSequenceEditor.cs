@@ -61,7 +61,13 @@ namespace FunkySystem.SequenceEditor
                         SelectedCodeNode.ForeColor = Theme.IsDark ? Color.Plum : Color.DarkOrchid;
                         try
                         {
+                            CodeDocument code = SelectedCodeNode.Tag as CodeDocument;
+                            Debug.WriteLine(code.Filename);
+
                             Editor.Target = SelectedCodeNode.Tag as CodeDocument;
+
+
+
                             Editor.ApplyLightTheme();
 
                             Editor.Text = Editor.Target.Code;
@@ -84,6 +90,9 @@ namespace FunkySystem.SequenceEditor
 
         public void InitTree()
         {
+            treeView1.Nodes.Clear();
+
+
             string uri = System.IO.Path.Combine(Program.SettingsDirectory, "Sequences");
 
             BookNode rootNode = new BookNode("Sequences", NodeType.Book);
@@ -97,9 +106,13 @@ namespace FunkySystem.SequenceEditor
                 foreach (string file in System.IO.Directory.GetFiles(dir, "*.cs"))
                 {
 
-                    BookNode fileNode = new BookNode(System.IO.Path.GetFileName(file), NodeType.Code);
-                    fileNode.Tag = FunkyCore.Roslyn.GetCodeDocument(file);
+                    string code = File.ReadAllText(file);
 
+
+                    BookNode fileNode = new BookNode(System.IO.Path.GetFileName(file), NodeType.Code);
+                    fileNode.Tag = FunkyCore.Roslyn.AddCodeDocument(file, code, true, "Sequencer");
+                    CodeDocument document = fileNode.Tag as CodeDocument;
+                    Debug.WriteLine("Loaded code document: " + document.Filename);
                     dirNode.Nodes.Add(fileNode);
                 }
             }
@@ -204,6 +217,11 @@ namespace FunkySystem.SequenceEditor
         }
 
         private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
+        {
+
+        }
+
+        private void btnReload_Click(object sender, EventArgs e)
         {
 
         }

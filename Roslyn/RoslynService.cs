@@ -675,7 +675,6 @@ namespace FunkySystem.Roslyn
                 .Distinct();
             return MefHostServices.Create(assemblies);
         }
-
         private static AdhocWorkspace CreateAdhocWorkspace()
         {
             var assemblies = MefHostServices.DefaultAssemblies
@@ -689,14 +688,12 @@ namespace FunkySystem.Roslyn
             var host = MefHostServices.Create(assemblies);
             return new AdhocWorkspace(host);
         }
-
         public RoslynDocument? GetDocumentByFilename(string fileName)
         {
             return _adhocWs.CurrentSolution.Projects
                 .SelectMany(p => p.Documents)
                 .FirstOrDefault(d => d.Name == fileName);
         }
-
         public async Task UpdateOpenDocumentAsync(RoslynDocument doc, string text)
         {
             if (doc == null) return;
@@ -706,7 +703,6 @@ namespace FunkySystem.Roslyn
 
             _adhocWs.TryApplyChanges(updatedDoc.Project.Solution);
         }
-
         public async Task<(Microsoft.CodeAnalysis.Completion.CompletionItem[] items, int spanStart)> GetCompletionsAsync(RoslynDocument doc, int caretPosition)
         {
             if (doc == null)
